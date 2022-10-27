@@ -1,0 +1,33 @@
+<%def name="tags_field(default_tags=[], email='', tags=[], tags_name='')">
+  <textarea id="${tags_name}" class="form-control" name="tags" spellcheck="false"
+    placeholder="checkins, venues, deploy, etc.">${tags_default(tags)}</textarea>
+  <script src="/filez/jquery.textcomplete.min.js"></script>
+  <script type="application/javascript">
+    $("${tags_name}").textcomplete([
+      {
+        words: ${json_encode(default_tags)},
+        match: /\b(\w+)$/,
+        search: function (term, callback) {
+          callback($.map(this.words, function (word) {
+            if (word.indexOf(term) === 0) {
+              return word;
+            } else {
+              return null;
+            }
+          }).sort());
+        },
+        index: 1,
+        replace: function (word) {
+          return word + ", ";
+        }
+      }
+    ]);
+  </script>
+</%def> <!-- tags_field -->
+
+<%def name="tags_default(tags)">
+% if tags:
+${'{0}, '.format(', '.join(tags))}
+% endif
+</%def>
+

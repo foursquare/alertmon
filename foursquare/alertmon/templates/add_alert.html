@@ -1,0 +1,31 @@
+<%inherit file="alert_form.html"/>
+
+<%block name="description">Defines new alerts.</%block>
+
+<%block name="add_alert_class">active</%block>
+
+
+<%block name="create_timestamp">
+<input type="hidden" id="create_timestamp" name="create_timestamp" value="${timestamp}">
+</%block>
+
+<%block name="create_user">
+<input type="hidden" id="create_username" name="create_username" value="${user}">
+</%block>
+
+<%block name="warn_thresh_op">
+  % for i in operators:
+  <option>${i}</option>
+  % endfor
+</%block>
+
+<%block name="crit_thresh_op">
+  % for i in operators:
+  <option>${i}</option>
+  % endfor
+</%block>
+
+<%block name="tags_default"></%block>
+
+<%block name="alert_form_action">/alert/add</%block>
+

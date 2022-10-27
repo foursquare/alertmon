@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>${title} | Alertmon</title>
+    <link href="/filez/bootstrap/css/bootstrap.min.css"
+          rel="stylesheet">
+    <link href="/filez/bootstrap/css/bootstrap-theme.min.css"
+          rel="stylesheet">
+    <script src="/filez/jquery.js"></script>
+    <script src="/filez/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/filez/underscore-min.js"></script>
+    <script src="/filez/backbone-min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h1>Alertmon ${title}.</h1>
+          <em><%block name="description">
+            description here, in block description.
+          </%block></em>
+      </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-12">
+
+          <ul class="nav nav-tabs">
+            <li class="<%block name="home_class"></%block>">
+              <a href="/">Home</a>
+            </li>
+            <li class="<%block name="firing_class"></%block>">
+              <a href="/firing">Firing</a>
+            </li>
+            <li class="<%block name="list_mute_class"></%block>">
+              <a href="/mute">Muted</a>
+            </li>
+            </li>
+            <li class="dropdown <%block name="alert_class"></%block>">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Alert Defs <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li class="<%block name="list_alert_class"></%block>">
+                  <a href="/alert?emailing=foo@example.com">List Alerts</a>
+                </li>
+                <li class="<%block name="add_alert_class"></%block>">
+                  <a href="/alert/add">Add Alerts</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+
+          <div class="pull-right">
+            <p>Thanks for working on alerts, <em>${user}</em>.
+            <a href="/auth/logout">(logout)</a></p>
+          </div>
+
+          <%block name="content">
+          <p>base template -- block content should be overwritten</p>
+          </%block>
+        </div>
+      </div>
+    </div>
+    <footer>
+      <hr>
+      <div class="container">
+        <p class="">Requests? Comments? Bugs? Email prod tickets.</p>
+        <p class="">&copy; 2014 foursquare labs</p>
+      </div>
+    </footer>
+  </body>
+  <script src="/filez/alertmon.js"></script>
+</html>

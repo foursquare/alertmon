@@ -1,0 +1,35 @@
+<%inherit file="base.html"/>
+
+<%block name="list_mute_class">active</%block>
+<%block name="mute_class">active</%block>
+<%block name="description">Displays and unmutes muted alerts.</%block>
+
+<%block name="content">
+
+<table class="table table-striped">
+<thead>
+  <tr>
+    <th>Muted Alert</th>
+    <th>Expire Time</th>
+    <th>Unmute Button</th>
+  </tr>
+</thead>
+<tbody>
+  % for exp_time, alert, alert_id in mutes:
+  <tr>
+    % if alert:
+    <td><a href="/alert/${alert_id}/view">${alert['title']}</a></td>
+    % else:
+    <td>(? <a href="/alert/${alert_id}/view">alert ${alert_id}</a> has yet to be picked up by nagios)</td>
+    % endif
+    <td>${exp_time}</td>
+    <td>
+      <a href="/alert/${alert_id}/mute/del"><button>Unmute</button></a>
+    </td>
+  </tr>
+  % endfor
+</tbody>
+</table>
+
+</%block>
+

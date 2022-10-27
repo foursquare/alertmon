@@ -1,0 +1,170 @@
+<%inherit file="alert_form.html"/>
+
+<%block name="description">Editing alert ${alert['_id']}</%block>
+
+<%block name="formtitle">Edit Alert</%block>
+
+<%block name="alert_form_action">/alert/${alert['_id']}/edit</%block>
+
+<%block name="control_column">
+</%block>
+
+<%block name="graphite_targets">
+  <script>
+    window.onload = function() {
+      % for t in range(1, len(target_keys)+1):
+        if ("${t}" === "1") {
+          var remove_button = false;
+        } else {
+          var remove_button = true;
+        }
+        alertmon.add_target({
+          target_id: ${t},
+          remove_button: remove_button,
+          value: ${json_encode(alert[ "alert_query_{0}".format(t) ])}
+        });
+    % endfor
+    };
+  </script>
+</%block>
+
+<%block name="warn_thresh_op">
+% for i in operators:
+  % if alert['warn_thresh_op'] == i:
+    <option selected>${i}</option>
+  % else:
+    <option>${i}</option>
+  % endif
+% endfor
+</%block>
+
+  <%block name="crit_thresh_op">
+  % for i in operators:
+    % if alert['crit_thresh_op'] == i:
+      <option selected>${i}</option>
+    % else:
+      <option>${i}</option>
+    % endif
+  % endfor
+  </%block>
+
+  <%block name="warn_trigger_type">
+  % for i in ["# of crossings", "% of crossings"]:
+    % if 'warn_trigger_type' in alert and alert['warn_trigger_type'] == i:
+      <option selected>${i}</option>
+    % else:
+      <option>${i}</option>
+    % endif
+  % endfor
+  </%block>
+
+  <%block name="crit_trigger_type">
+  % for i in ["# of crossings", "% of crossings"]:
+    % if 'crit_trigger_type' in alert and alert['crit_trigger_type'] == i:
+      <option selected>${i}</option>
+    % else:
+      <option>${i}</option>
+    % endif
+  % endfor
+  </%block>
+
+  <%block name="warn_trigger_value">
+  % if 'warn_trigger_value' in alert:
+  value="${alert['warn_trigger_value']}"
+  % else:
+  value=""
+  % endif
+  </%block>
+
+<%block name="crit_trigger_value">
+% if 'crit_trigger_value' in alert:
+value="${alert['crit_trigger_value']}"
+% else:
+value=""
+% endif
+</%block>
+
+<%block name="warn_thresh_num">
+% if 'warn_thresh_num' in alert:
+value="${alert['warn_thresh_num']}"
+% else:
+value=""
+% endif
+</%block>
+
+<%block name="crit_thresh_num">
+% if 'crit_thresh_num' in alert:
+value="${alert['crit_thresh_num']}"
+% else:
+value=""
+% endif
+</%block>
+
+
+
+<%block name="warn_mail_list">
+% if 'warn_mail_list' in alert:
+${", ".join(alert['warn_mail_list'])}
+% endif
+</%block>
+
+<%block name="crit_mail_list">
+% if 'crit_mail_list' in alert:
+${", ".join(alert['crit_mail_list'])}
+% endif
+</%block>
+
+<%block name="create_timestamp">
+<input type="hidden" id="create_timestamp" name="create_timestamp" value="${alert['create_timestamp']}">
+</%block>
+
+<%block name="create_user">
+<input type="hidden" id="create_username" name="create_username" value="${alert['create_username']}">
+</%block>
+
+<%block name="alert_title">${alert['alert_title']}</%block>
+<%block name="alert_reason">${alert['alert_reason']}</%block>
+
+<%block name="from_time">${alert['from_time']}</%block>
+<%block name="until_time">${alert['until_time']}</%block>
+
+<%block name="close_no_save">
+<a href="/alert/${alert['_id']}/view">
+  <button type="button" class="btn btn-danger">
+  Close without Saving
+  </button>
+ </a>
+</%block>
+
+<%block name="annotation">
+% if 'annotation' in alert:
+${alert['annotation']}
+% endif
+</%block>
+
+ <%block name="post_query">
+  % for i in post_queries:
+   % if alert['post_query'] == i:
+      <option selected>${i}</option>
+    % else:
+      <option>${i}</option>
+    % endif
+  % endfor
+  </%block>
+
+<%block name="graphite_cluster">
+  % for cluster in ['graphite-cluster-d', 'graphitemem']:
+    % if 'graphite_cluster' in alert and alert['graphite_cluster'] == cluster:
+      <option selected>${cluster}</option>
+    % else:
+      <option>${cluster}</option>
+    % endif
+  % endfor
+</%block>
+
+<%block name="always_page_check">
+% if 'always_page' in alert and alert['always_page'] == 'on':
+checked=true
+% endif
+</%block>
+

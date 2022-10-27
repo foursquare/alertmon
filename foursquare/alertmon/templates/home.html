@@ -1,0 +1,42 @@
+<%inherit file="base.html"/>
+
+<%block name="home_class">active</%block>
+
+<%block name="description">Displays recently created, fired, and muted alerts.</%block>
+
+<%block name="content">
+<hr>
+
+<a href="/alert/add"><button class="btn btn-primary">Add Alert</button></a>
+
+<hr>
+
+<%namespace name="search_form" file="fragments/search_form.html"/>
+${search_form.search_form(email='', tags=[])}
+
+<hr>
+<h2>Recently Muted Alerts</h2>
+<div id="muted-template">
+</div>
+<a href="/mute">Muted page</a>
+<hr>
+<h2>Recent Alert Definitions</h2>
+<div id="alert-def-template">
+  ${alert_list(recent)}
+</div>
+<hr>
+<h2>Advanced</h2>
+
+<a href="/oncall/hours"><button class="btn btn-info">Prod On Call Daytime Hours</button></a>
+
+</%block>
+
+<%def name="alert_list(alerts)">
+  <ul>
+    % for i in alerts:
+    <li><a href="/alert/${i.alert_id}/view">${i.title}</a></li>
+    % endfor
+  </ul>
+</%def>
+
+
