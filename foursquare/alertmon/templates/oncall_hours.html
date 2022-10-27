@@ -1,0 +1,67 @@
+<%inherit file="two-column.html"/>
+
+<%block name="description">Mute all but most critical alerts outside daytime
+window</%block>
+
+<%block name="content">
+<div class="row">
+  <div class="col-md-12">
+    <h2><%block name="formtitle">Prod On Call Daytime Hours</%block></h2>
+    <p>Set in UTC. All primary oncall alerts, except those specifically
+    marked as "always requires action," will be sent to a notice list outside
+    this time range.</p>
+    <p><button id="set_est_daytime">Set to EST Daytime</button> (10:00 to 18:00 EST = 14:00 to 22:00 UTC)</p>
+    <p><button id="set_pst_daytime">Set to PST Daytime</button> (10:00 to 18:00 PST = 17:00 to 01:00 UTC)</p>
+    <form role="form" action="/oncall/hours" method="post">
+
+      <div class="form-inline">
+        <div class="form-group">
+          <input type="time" class="form-control" id="oncall_hours_from"
+          name="oncall_hours_from" placeholder="17:00"
+          value="${oncall_hours_from}"></input> to 
+        </div>
+        <div class="form-group">
+          <input type="time" class="form-control" id="oncall_hours_to"
+          name="oncall_hours_to" placeholder="01:00"
+          value="${oncall_hours_to}"></input>
+        </div>
+      <button type="submit" class="btn btn-default">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<h3>24-7 Alerts</h3>
+<ul>
+% for i in allday_alerts:
+<li><a href="/alert/${i.alert_id}/view">${i.title}</a></li>
+% endfor
+</ul>
+
+<script type="application/javascript">
+$( "#set_est_daytime" ).click(function() {
+  $( "#oncall_hours_from" ).val('14:00');
+  $( "#oncall_hours_to" ).val('22:00');
+});
+
+$( "#set_pst_daytime" ).click(function() {
+  $( "#oncall_hours_from" ).val('17:00');
+  $( "#oncall_hours_to" ).val('01:00');
+});
+</script>
+
+
+</%block>
+
+<%def name="hours_from()">
+% if oncall_hours_from:
+${oncall_hours_from}
+% endif
+</%def>
+
+<%def name="hours_to()">
+% if oncall_hours_to:
+${oncall_hours_to}
+% endif
+</%def>
+

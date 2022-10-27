@@ -1,0 +1,46 @@
+<%inherit file="base.html"/>
+
+<%block name="firing_class">active</%block>
+<%block name="description">Displays and filters firing alerts.</%block>
+
+<%block name="content">
+<div class="row">
+<div class="col-md-12">
+<h2>Firing Alerts</h2>
+${alert_table('Critical', alerts['CRITICAL'])}
+${alert_table('Warning', alerts['WARNING'])}
+${alert_table('Unknown', alerts['UNKNOWN'])}
+</div>
+</div>
+</%block>
+
+<%def name="alert_table(table_title, alert_list)">
+<h3>${table_title}</h3>
+<table class="table table-striped">
+<thead>
+  <tr>
+    <th>Alert</th>
+    <th>Reason</th>
+    <th>Mute</th>
+  </tr>
+</thead>
+<tbody>
+  % for a in alert_list:
+  <tr>
+    <td><a href="/alert/${a['alert_id']}/view">${a['title']}</a></td>
+    <td>${a['reason']}</td>
+    <td>
+      % if a['mute']:
+      <p>
+        <em>Muted until ${a['mute']}</em>
+        <a href="/alert/${a['alert_id']}/mute/del"><button>(Unmute)</button></a>
+      </p>
+      % else:
+      <a href="/alert/${a['alert_id']}/mute/add"><button>Mute</button></a>
+      % endif
+    </td>
+  </tr>
+  % endfor
+</tbody>
+</table>
+</%def>

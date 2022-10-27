@@ -1,0 +1,20 @@
+<script type="text/template" class="template" id="target-template">
+  <div id="target_<%= i %>" class="row">
+    <% if (remove_button === true) { %>
+    <div class="col-md-10">
+    <% } else { %>
+    <div class="col-md-12">
+    <% } %>
+      <input type="text" class="form-control"
+      id="alert_query_<%= i %>"
+      name="alert_query_<%= i %>"
+      value="<%= value %>"
+      placeholder="alert_query_<%= i %>">
+    </div>
+    <% if (remove_button === true) { %>
+    <div class="col-md-2">
+      <a id="remove_target_<%= i %>" href="#"> (Remove)</a>
+    </div>
+    <% } %>
+  </div>
+</script>

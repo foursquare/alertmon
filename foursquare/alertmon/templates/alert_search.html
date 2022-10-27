@@ -1,0 +1,131 @@
+<%inherit file="two-column.html"/>
+
+<%block name="alert_class">active</%block>
+<%block name="list_alert_class">active</%block>
+
+<%block name="description">Lists and filters alerts.</%block>
+
+<%block name="control_column">
+
+<%namespace name="search_form" file="fragments/search_form.html"/>
+${search_form.search_form(email='', tags=[])}
+
+</%block>
+
+<%block name="display_column">
+<h2><%block name="filter_title">${filter_title}</%block></h2>
+<div id="alert-def-template">
+  % for a in alerts:
+  <h3 id="${a['_id']}">
+    <a href="/alert/${a['_id']}/view">
+      % if a['alert_title'] != "":
+        ${a['alert_title']}
+      % else:
+        ${a['_id']}
+      % endif
+    </a>
+  </h3>
+  <p>
+  <button id="${a['_id']}" type="button" class="check_firing btn btn-primary">
+    Alert Status
+  </button>
+  <a href="/alert/${a['_id']}/edit">
+    <button type="button" class="btn btn-primary">
+      Edit
+    </button>
+  </a>
+  </p>
+
+  <div id="${a['_id']}_status">
+  </div>
+
+  % if a['alert_reason'] != "":
+    <h4>Reason this alert fires: ${a['alert_reason']}</h4>
+  % endif
+
+  % if 'annotation' in a:
+    <h4>Annotation</h4>
+    <pre>${a['annotation']}</pre>
+  % endif
+
+  % if a['tags']:
+  Alert Tags:
+  <ul class="list-inline">
+    % for t in a['tags']:
+    <li>${t}</li>
+    % endfor
+  </ul>
+  % endif
+
+  % if 'alert_query_1' in a:
+  <p>Query: ${a['alert_query_1']}</p>
+  % else:
+  <p><em>NO QUERY DEFINED FOR ALERT</em></p>
+  % endif
+  <p>Post-query: ${a['post_query']}</p>
+
+  % if a['warn_thresh_op'] == "unused":
+  <p><strong>No warning-level alert set.</strong><p>
+  % else:
+  <p>If
+  ${a['warn_trigger_value']}
+  % if a['warn_trigger_type'][0] == '%':
+  \%
+  % endif
+  of the samples
+  % if int(a['warn_trigger_value']) == 1:
+  is
+  % else:
+  are
+  % endif
+  ${a['warn_thresh_op']} ${a['warn_thresh_num']},
+  it's a <em>warning</em>.</p>
+  <p>Sending warning mail to:<br />
+  <ul class="list-inline">
+    % for i in a['warn_mail_list']:
+    <li>${i}</li>
+    % endfor
+  </ul>
+  </p>
+  % endif
+  <hr>
+
+  % if a['crit_thresh_op'] == "unused":
+    <p><strong>No crit-level alert set.</strong><p>
+  % else:
+    <p>If
+    ${a['crit_trigger_value']}
+    % if a['crit_trigger_type'][0] == '%':
+    \%
+    % endif
+    of the samples
+    % if int(a['crit_trigger_value']) == 1:
+      is
+    % else:
+      are
+    % endif
+    ${a['crit_thresh_op']} ${a['crit_thresh_num']},
+    it's <em>critical</em>!</p>
+  <p>Sending critical mail to:<br />
+  <ul class="list-inline">
+    % for i in a['crit_mail_list']:
+      <li>${i}</li>
+    % endfor
+  </ul>
+  </p>
+
+  % endif
+  <hr>
+
+  <p>
+  <a class="btn btn-info" href="/alert/${a['_id']}/clone" role="button"
+    onclick="return confirm('Are you sure you want to CLONE this alert?')">Clone Alert</a>
+  <a class="btn btn-danger" href="/alert/${a['_id']}/del" role="button"
+    onclick="return confirm('Are you sure you want to DELETE this alert?')">Delete Alert</a>
+  </p>
+
+  % endfor
+</div>
+
+</%block>
+

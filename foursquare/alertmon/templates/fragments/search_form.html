@@ -1,0 +1,24 @@
+<%def name="search_form(email='', tags=[])">
+  <h3>Search</h3>
+  <form role="form" action="/alert" method="get">
+    <div class="form-group">
+      <label for="mailSearch">
+        Email
+      </label>
+      <input type="text" class="form-control" id="mailSearch" name="emailing" placeholder="email" value="${email}">
+    </div> <!-- form-group -->
+    <div class="form-group">
+      <label for="tagSearch">
+        Tag(s)
+      </label>
+      <%namespace name="tags_field" file="tags_field.html"/>
+      ${tags_field.tags_field(
+          default_tags=default_tags,
+          email=email,
+          tags=tags,
+          tags_name='tagSearch')}
+    </div> <!-- form-group -->
+    <button type="submit" class="btn btn-default">Submit</button>
+  </form>
+</%def>
+

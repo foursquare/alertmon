@@ -1,0 +1,189 @@
+<form role="form" action="<%block name="alert_form_action"></%block>" method="post">
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="alert_template" class="control-label">
+              Alert template
+            </label>
+            <select name="alert_template"
+              class="form-control" id="alert_template">
+              <option>None</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="alert_dashboard" class="control-label">
+              Alert dashboard
+            </label>
+            <select name="alert_dashboard"
+              class="form-control" id="alert_dashboard">
+              <option>None</option>
+            </select>
+          </div>
+        </div>
+      </div>
+                
+      <div class="form-group">
+        <label for="alert_title" class="control-label">
+          Alert title (what is this alert testing?)
+        </label>
+        <input type="text" class="form-control" name="alert_title" id="alert_title"
+        placeholder="System load, mongoc machines">
+      </div>
+      <div class="form-group">
+        <label for="mail_list" class="control-label">
+          Alert reason (page when this fires)
+        </label>
+        <input type="text" class="form-control" name="alert_reason" id="alert_reason"
+        placeholder="System load too high on mongoc machine">
+      </div>
+
+      <div class="form-group">
+        <label for="mail_list" class="control-label">
+          Comma-separated list of emails
+        </label>
+        <input type="text" class="form-control" name="mail_list" id="mail_list"
+        placeholder="foo@example.com">
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 alert alert-warning">
+          <div class="form-group">
+            <label for="warning_alert_thresh_op" class="control-label">
+              What's the warning-level threshold?
+            </label>
+            <div class="row">
+
+              <div class="col-md-6">
+                <select name="warn_thresh_op"
+                class="form-control" id="warning_alert_thresh_op">
+                <option>unused</option>
+                <option>&lt;</option>
+                <option>&le;</option>
+                <option>=</option>
+                <option>!=</option>
+                <option>&gt;</option>
+                <option>&ge;</option>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <input type="number" class="form-control" id="warn_thresh_num"
+                name="warn_thresh_num"
+                placeholder="threshold number">
+              </div>
+
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="warn_trigger_type" class="control-label">
+              How many threshold-crossings trigger a warning?
+            </label>
+
+            <div class="row">
+              <div class="col-md-6">
+                <select class="form-control" id="warn_trigger_type"
+                name="warn_trigger_type">
+                  <option># of crossings</option>
+                  <option>% of crossings</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <input type="number" class="form-control" id="warn_trigger_value"
+                name="warn_trigger_value" placeholder="number">
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-md-6 alert alert-danger">
+          <div class="form-group">
+            <label for="crit_thresh_op" class="control-label">
+              What's the critical-level threshold?
+            </label>
+            <div class="row">
+              <div class="col-md-6">
+                <select name="crit_thresh_op"
+                class="form-control" id="crit_thresh_op">
+                  <option>unused</option>
+                  <option>&lt;</option>
+                  <option>&le;</option>
+                  <option>=</option>
+                  <option>!=</option>
+                  <option>&gt;</option>
+                  <option>&ge;</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <input type="number" class="form-control" id="critical_alert_thresh"
+                name="crit_thresh_num" placeholder="threshold number">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="crit_trigger_type" class="control-label">
+              How many threshold-crossings trigger a crisis?
+            </label>
+
+            <div class="row">
+              <div class="col-md-6">
+                <select class="form-control" id="crit_trigger_type"
+                name="crit_trigger_type">
+                  <option># of crossings</option>
+                  <option>% of crossings</option>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <input type="number" class="form-control" id="crit_trigger_value"
+                name="crit_trigger_value" placeholder="number">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label for="alert_query" class="control-label">Graphite targets</label>
+        <input type="text" class="form-control" id="alert_query" name="alert_query"
+        placeholder='Paste in target list here, i.e. target=machines.fsao41.gmond.system.net.out&target=timeShift(machines.fsao41.gmond.system.net.out,"1day")'>
+      </div>
+
+      <div class="form-group">
+        <label for="post_query" class="control-label">Post-Query Function</label>
+        <select name="post_query"
+        class="form-control" id="post_query">
+          <option>None</option>
+          % for i in post_queries:
+          <option>${i}</option>
+          % endfor
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="from_time" class="control-label">Amount of time looked at every time this is checked. Only accepts relative times in form number{h,m,d}.</label>
+        <div class="row">
+          <div class="col-md-6">
+            <input type="text" class="form-control" id="from_time" name="from_time"
+            placeholder="6m">
+          </div>
+          <div class="col-md-6">
+            <input type="text" class="form-control" id="until_time" name="until_time"
+            placeholder="1m">
+          </div>
+        </div>
+      </div>
+
+      <input type="hidden" id="username" name="username" value="${user}">
+      <input type="hidden" id="timestamp" name="timestamp" value="${timestamp}">
+
+
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+

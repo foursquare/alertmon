@@ -1,0 +1,300 @@
+<%inherit file="two-column.html"/>
+
+<%block name="alert_class">active</%block>
+
+<%block name="content">
+<div class="row">
+  <div class="col-md-12">
+    <h2><%block name="formtitle">Adding New Alerts</%block></h2>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-4">
+    <%block name="control_column">
+<p>Get graphite metrics with the Graphite composer</a>.</p>
+<p><a href="/">Home</a></p>
+    </%block>
+  </div>
+  <div class="col-md-8">
+    <form role="form" action="<%block name="alert_form_action"></%block>" method="post">
+    <h2></h2>
+
+      <h4>Define what triggers the alert</h4>
+
+      <div id="graphite_targets" class="form-group">
+        <label for="alert_query_1" class="control-label">Graphite targets</label>
+        (<a id="add_target" href="#">Add target</a>)
+        <%block name="graphite_targets">
+        <input type="text" class="form-control" id="alert_query_1" name="alert_query_1"
+        placeholder='timeShift(machines.fsao41.gmond.system.net.out,"1day")'>
+        </%block>
+      </div>
+
+      <label for="tags" class="control-label">Tags</label>
+      <span id="tag-info-icon" class="glyphicon glyphicon-question-sign"></span><br/>
+      <span id="tag-info-container"></span>
+      <script type="application/javascript">
+        $("#tag-info-icon").hover(
+          function(e) {
+            $("#tag-info-container").append(
+              "<p id='tag-info'>" +
+                "Alertmon now supports alert tagging. These should be anything " +
+                "relevant to the alert, such as the name of any services or an " +
+                "environment it monitors, or anything you'd like to add for personal " +
+                "reference." +
+              "</p>");
+          },
+          function(e) {
+            $("#tag-info").remove();
+          }
+        );
+      </script>
+      <div class="form-group">
+
+        <%namespace name="tags_field" file="fragments/tags_field.html"/>
+        <%
+        if alert:
+          tags = alert['tags']
+        else:
+          tags = []
+        %>
+        ${tags_field.tags_field(
+            default_tags=default_tags,
+            email=email,
+            tags=tags,
+            tags_name='tagSearch')}
+
+      </div>
+
+      <div class="form-group">
+        <label for="from_time" class="control-label">
+          Time Range to be checked in this alert. e.g. -6mins, -1hour, -1day
+        </label>
+        <div class="row">
+          <div class="col-md-6">
+            <p>From</p>
+            <input type="text" class="form-control" id="from_time" name="from_time"
+            value="<%block name="from_time">-6mins</%block>">
+          </div>
+          <div class="col-md-6">
+            <p>Until</p>
+            <input type="text" class="form-control" id="until_time" name="until_time"
+            value="<%block name="until_time">-1min</%block>">
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <p>Define thresholds for metrics reported within the time range</p>
+        <div class="col-md-6 alert alert-warning">
+          <div class="form-group">
+            <label for="warn_thresh_op" class="control-label">
+              What's the warning-level threshold?
+            </label>
+            <div class="row">
+
+              <div class="col-md-6">
+                <select name="warn_thresh_op"
+                class="form-control" id="warn_thresh_op">
+                <option>unused</option>
+                <%block name="warn_thresh_op">
+                </%block>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <input type="number" step="any" class="form-control" id="warn_thresh_num"
+                <%block name="warn_thresh_num">
+                value=""
+                </%block>
+                name="warn_thresh_num"
+                placeholder="threshold number">
+              </div>
+
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="warn_trigger_type" class="control-label">
+              How many minutes can cross the threshold before triggering a warning?
+            </label>
+
+            <div class="row">
+              <div class="col-md-6">
+                <select class="form-control" id="warn_trigger_type"
+                name="warn_trigger_type">
+                <%block name="warn_trigger_type">
+                  <option># of mins crossing</option>
+                  <option>% of mins crossing</option>
+                </%block>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <input type="number" step="any" class="form-control" id="warn_trigger_value"
+                <%block name="warn_trigger_value">
+                value=""
+                </%block>
+                name="warn_trigger_value" placeholder="number">
+              </div>
+            </div>
+          </div>
+
+        <div class="form-group">
+          <label for="warn_mail_list" class="control-label">
+            Who gets warning email?
+          </label>
+          <input type="text" class="form-control" name="warn_mail_list" id="warn_mail_list"
+          value="<%block name="warn_mail_list"></%block>"
+          placeholder="foo1@example.com, foo2@example.com">
+        </div>
+
+        </div>
+
+        <div class="col-md-6 alert alert-danger">
+          <div class="form-group">
+            <label for="crit_thresh_op" class="control-label">
+              What's the critical-level threshold?
+            </label>
+            <div class="row">
+              <div class="col-md-6">
+                <select name="crit_thresh_op"
+                class="form-control" id="crit_thresh_op">
+                  <option>unused</option>
+                  <%block name="crit_thresh_op">
+                  </%block>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <input type="number" step="any" class="form-control" id="crit_thresh_num"
+                <%block name="crit_thresh_num">
+                value=""
+                </%block>
+                name="crit_thresh_num" placeholder="threshold number">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="crit_trigger_type" class="control-label">
+              How many minutes can cross the threshold before triggering
+              a critical?
+            </label>
+
+            <div class="row">
+              <div class="col-md-6">
+                <select class="form-control" id="crit_trigger_type"
+                name="crit_trigger_type">
+                <%block name="crit_trigger_type">
+                  <option># of mins crossings</option>
+                  <option>% of mins crossings</option>
+                </%block>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <input type="number" step="any" class="form-control" id="crit_trigger_value"
+                <%block name="crit_trigger_value">
+                value=""
+                </%block>
+                name="crit_trigger_value" placeholder="number">
+              </div>
+            </div>
+          </div>
+
+        <div class="form-group">
+          <label for="crit_mail_list" class="control-label">
+            Who gets critical email?
+          </label>
+          <input type="text" class="form-control" name="crit_mail_list" id="crit_mail_list"
+          value="<%block name="crit_mail_list"></%block>"
+          placeholder="foo@example.com">
+        </div>
+      </div>
+      <h4>Customize the alert email</h4>
+      <div class="form-group">
+        <label for="alert_title" class="control-label">
+          Alert title (what is this alert testing?)
+        </label>
+          (<a href="#title-modal">View mustache tags</a>)
+        <input type="text" class="form-control" name="alert_title" id="alert_title"
+        value="<%block name="alert_title"></%block>"
+        placeholder="System load, mongoc machines">
+      </div>
+      <div class="form-group">
+        <label for="alert_reason" class="control-label">
+          Alert reason (page when this fires)
+        </label>
+          (<a href="#reason-modal">View mustache tags</a>)
+        <input type="text" class="form-control" name="alert_reason" id="alert_reason"
+        value="<%block name="alert_reason"></%block>"
+        placeholder="System load too high on mongoc machine">
+      </div>
+
+      <div class="form-group">
+        <label for="annotation" class="control-label">
+          Annotations (notes for next time this alert pages)
+        </label>
+        <textarea class="form-control" name="annotation"
+        id="annotation"
+        placeholder="If this pages, check $FOO and verify $BAR isn't happening.."><%block name="annotation"></%block></textarea>
+      </div>
+
+
+
+
+      <h4>(optional/advanced) specify more query options</h4>
+
+      <div class="form-group">
+        <label for="post_query" class="control-label">Post-Query Function</label>
+        <select name="post_query"
+        class="form-control" id="post_query">
+        <option>${NO_POST_QUERY_STRING}</option>
+          <%block name="post_query">
+            % for i in post_queries:
+              <option>${i}</option>
+            % endfor
+          </%block>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="graphite_cluster" class="control-label">Graphite Cluster</label>
+        <select name="graphite_cluster" class="form-control" id="graphite_cluster">
+          <%block name="graphite_cluster">
+            <option>graphite-cluster-d</option>
+            <option>graphitemem</option>
+          </%block>
+        </select>
+      </div>
+
+      <div class="checkbox">
+        <label for="always_page">
+          <input
+          <%block name="always_page_check">
+          </%block>
+          name="always_page" type="checkbox" id="always_page"> Send this alert to
+          a pager on and off daytime hours (only used for primary oncall
+          alerts).
+        </label>
+      </div>
+
+      <%block name="create_timestamp">
+      </%block>
+
+      <%block name="create_user">
+      </%block>
+
+      <%block name="last_edit_user">
+      <input type="hidden" id="last_edit_username" name="last_edit_username" value="${user}">
+      </%block>
+
+      <%block name="last_edit_timestamp">
+      <input type="hidden" id="last_edit_timestamp" name="last_edit_timestamp" value="${timestamp}">
+      </%block>
+
+      <button type="submit" class="btn btn-primary">Save</button>
+      <%block name="close_no_save">
+      </%block>
+    </form>
+   </div>
+</%block>
+
