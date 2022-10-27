@@ -1,5 +1,5 @@
 APScheduler==2.1.2
-Mako==1.0.7
+Mako==1.2.2
 ansicolors==1.0.2
 future==0.17.1
 futures==2.2.0
